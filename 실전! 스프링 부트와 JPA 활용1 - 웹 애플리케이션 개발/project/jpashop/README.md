@@ -104,6 +104,19 @@ implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6"
 ~~~
 - 내장 타입: JPA에서 엔티티의 일부로 취급되는 값 객체
 
+### 엔티티 클래스 개발 2
+**실무에서는 @ManyToMany 절대 사용 금지**
+~~~java
+@ManyToMany
+@JoinTable(name = "category_item",
+    joinColumns = @JoinColumn(name = "category_id"),       // 현재 엔티티(Category)의 FK
+    inverseJoinColumns = @JoinColumn(name = "item_id"))    // 상대 엔티티(Item)의 FK
+private List<Item> items = new ArrayList<>();
+~~~
+- @ManyToMany는 두 테이블이 서로 다대다 관계를 가질 때 사용함
+- 하지만 RDB에서는 다대다 관계를 직접 표현할 수 없기 때문에, 중간에 조인 테이블(연결 테이블)을 만들어야 함
+- 이 조인 테이블을 정의하는 게 바로 @JoinTable 임
+
 
 
 
