@@ -68,7 +68,41 @@ implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6"
     A: @Transactional 어노테이션 또는 트랜잭션 경계 설정<br>
     => JPA를 사용한 데이터 변경(쓰기) 작업은 반드시 트랜잭션 안에서 이루어져야 함. Spring에서는 '@Transactional' 어노테이션으로 편리하게 트랜잭션을 관리할 수 있음
 
+## 섹션 3. 도메인 분석 설계
+### 엔티티 클래스 개발 1
+~~~java
+@Embeddable  // 내장 타입 클래스를 정의할 때 사용
 
+@Embedded  // 엔티티에서 내장 타입을 사용할 때 붙임
+
+@JoinColumn  // 데이터베이스 테이블에서 외래 키(FK)를 어떤 컬럼으로 매핑할 지 지정하는 어노테이션. 연관관계의 주인에 사용되며, 실제로 DB에 FK 컬럼이 생성되는 쪽임
+
+@OneToMany(mappedBy = "member")  // mappedBy: 연관관계의 주인이 아닌 쪽에서 사용됨. 이 필드를 기준으로 DB에 FK 컬럼이 생성되지 않음
+
+@Enumerated(EnumType.STRING)  // 항상 String으로 지정 -> ORDINAL로 하면 숫자로 되기 때문에 순서가 바뀌면 지정된 숫자도 바뀜
+
+/*
+    상속 매핑 전략 지정
+    - JPA는 객체지향 언어의 상속 구조를 RDB 테이블에 매핑할 수 있게 해줌
+    - 그 중 SINGLE_TABLE 전략은 모든 자식 클래스를 하나의 테이블에 저장하는 방식임
+*/
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+
+/*
+    구분자 컬럼 지정
+    - SINGLE_TABLE 전략에서는 하나의 테이블에 여러 타입(Book, Album, Movie)이 들어가기 때문에, 어떤 클래스의 데이터인지 구분하는 컬럼이 필요함
+    - 이 역할을 하는 것이 구분자(discriminator) 컬럼이고, 이름을 dtype으로 지정한 것
+*/
+@DiscriminatorColumn(name = "dtype")
+
+/*
+    구분자 컬럼에 저장할 값 지정
+    - 해당 클래스를 저장할 때, dtype 컬럼에 어떤 값을 넣을지 지정함
+    - 예를 들면, Book 객체가 저장되면, dtype 컬럼에는 B가 들어감
+*/
+@DiscriminatorValue("B")
+~~~
+- 내장 타입: JPA에서 엔티티의 일부로 취급되는 값 객체
 
 
 
