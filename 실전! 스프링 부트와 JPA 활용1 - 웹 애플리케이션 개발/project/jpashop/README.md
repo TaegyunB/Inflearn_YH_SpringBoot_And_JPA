@@ -169,14 +169,14 @@ private EntityManager em;
     - 스프링이 JPA EntityManagerFactory로부터 트랜잭션 범위에 맞는 EntityManager를 주입해 주어야 함
     - @PersistenceContext를 선언하면, 스프링이 트랜잭션 단위의 EntityManager를 생성해서 여기에 주입함
 
+### 회원 서비스 개발
+- @Transactional
+    - 트랜잭션, 영속성 컨텍스트
+    - readOnly = true: 데이터의 변경이 없는 읽기 전용 메서드에 사용, 영속성 컨텍스트를 플러시 하지 않으므로 약간의 성능 향상(읽기 전용에는 다 적용)
+    - 데이터베이스 드라이버가 지원하면 DB에서 성능 향상
 
+- @Autowired
+    - 생성자 Injection 많이 사용, 생성자가 하나면 생략 가능
 
-
-
-
-
-
-
-
-
-
+- @RequiredArgsConstructor
+    - final 있는 필드만 가지고 생성자를 생성해줌
