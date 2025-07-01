@@ -274,3 +274,34 @@ logging:
     => '@Transactional(readOnly = true)'는 해당 트랜잭션이 데이터를 변경하지 않음을 알려주어 JPA 같은 ORM 프레임워크가 내부적으로 읽기 전용에 맞는 최적화를 수행하게 하여 성능을 개선함
 
 ## 섹션 7. 주문 도메인 개발
+### 주문 서비스 개발
+- @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    - 파라미터가 없는 기본 생성자를 만들어줌
+    - 그 접근 제어자를 protected로 지정함
+
+**JPA가 엔티티를 생성할 때 기본 생성자를 필요로 함**
+"엔티티 클래스에는 public 또는 protected의 파라미터 없는 생성자가 필수로 존재해야 함"
+- JPA가 리플렉션으로 객체를 생성할 때 생성자를 호출하기 때문
+- private 생성자는 JPA가 접근할 수 없음
+그래서 아래 둘 중 하나가 반드시 필요함
+~~~java
+public Order() {}
+
+protected Order() {}
+~~~
+
+**하지만 생성자를 public으로 두면 잘못된 객체 생성 가능**
+- 예를 들면 아무런 정보 없이 다음과 같이 엔티티를 생성할 수 있음
+~~~java
+Order order = new Order();
+~~~
+- 이러면 필수 연관관계나 상태값이 빠진 불완전한 객체가 생성될 수 있음
+- 이것은 유지보수에 매우 위험
+
+**그래서 protected 기본 생성자를 만듦**
+- protected로 두면
+    - JPA는 내부적으로 접근할 수 있음
+    - 외부 코드에서는 new Order() 호출이 막힘
+=> 그래서 @NoArgsConstructor 어노테이션을 사용
+
+
