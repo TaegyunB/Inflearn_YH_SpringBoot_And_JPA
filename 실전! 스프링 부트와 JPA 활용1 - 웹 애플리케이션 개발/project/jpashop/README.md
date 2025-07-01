@@ -180,3 +180,19 @@ private EntityManager em;
 
 - @RequiredArgsConstructor
     - final 있는 필드만 가지고 생성자를 생성해줌
+
+**생성자 주입**
+~~~java
+public class MemberService {
+    private final MemberReposiory memberRepository;
+
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+    ...
+}
+~~~
+- 생성자 주입 방식을 권장
+- 변경 불가능한 안전한 객체 생성 가능
+- 생성자가 하나면, @Autowired를 생략할 수 있음
+- final 키워드를 추가하면 컴파일 시점에 memberRepository를 설정하지 않는 오류를 체크할 수 있음
