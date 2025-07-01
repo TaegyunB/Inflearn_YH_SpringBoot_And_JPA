@@ -272,3 +272,5 @@ logging:
 5. 상품 서비스 클래스 레벨에 '@Transactional(readOnly = true)'를 적용하는 주된 목적은 무엇인가요?<br>
     A: 읽기 작업 성능 최적화<br>
     => '@Transactional(readOnly = true)'는 해당 트랜잭션이 데이터를 변경하지 않음을 알려주어 JPA 같은 ORM 프레임워크가 내부적으로 읽기 전용에 맞는 최적화를 수행하게 하여 성능을 개선함
+
+## 섹션 7. 주문 도메인 개발
