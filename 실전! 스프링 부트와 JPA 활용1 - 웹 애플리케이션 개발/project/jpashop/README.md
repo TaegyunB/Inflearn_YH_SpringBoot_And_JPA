@@ -196,3 +196,57 @@ public class MemberService {
 - 변경 불가능한 안전한 객체 생성 가능
 - 생성자가 하나면, @Autowired를 생략할 수 있음
 - final 키워드를 추가하면 컴파일 시점에 memberRepository를 설정하지 않는 오류를 체크할 수 있음
+
+### 회원 기능 테스트
+**테스트 케이스를 위한 설정**
+- 테스트는 케이스 격리된 환경에서 실행하고, 끝나면 데이터를 초기화하는 것이 좋음
+- 그런 면에서 메모리 DB를 사용하는 것이 가장 이상적
+~~~yml
+# test/resources/application.yml
+
+spring:
+#  datasource:
+#    url: jdbc:h2:mem:test  # 메모리 모드로 동작
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: create  # 실행시키는 시점에 가지고 있는 테이블을 다 지우고 다시 생성함
+#    properties:
+#      hibernate:
+#        show_sql: true  # System.out 으로 출력됨
+#        format_sql: true
+
+# 위에가 없으면 스프링 부트는 자동적으로 메모리 모드로 동작함
+
+logging:
+  level:
+    org.hibernate.SQL: debug  # jpa나 hibernate가 생성하는 sql이 다 보임 -> log로 출력됨
+    org.hibernate.type: trace
+~~~
+- 이제 테스트에서 스프링을 실행하면 이 위치에 있는 설정 파일을 읽음
+- 스프링 부트는 datasource 설정이 없으면, 기본적으로 메모리 DB를 사용하고, driver-class도 현재 등록된 라이브러리를 보고 찾아줌
+- 추가로 ddl-auto도 create-drop 모드로 동작함. 따라서 데이터소스나, JPA 관련된 별도의 추가 설정을 하지 않아도 됨
+
+### 퀴즈
+1. JPA에서 SQL과 JPQL 쿼리의 주요 차이점은 무엇인가요?<br>
+    A: 테이블 기반 vs 엔티티 객체 기반<br>
+    => JPQL은 데이터베이스 테이블이 아닌 엔티티 객체를 대상으로 쿼리하며, SQL과 문법 차이가 있음. JPA는 이 쿼리를 적절한 SQL로 변환함
+
+2. JPA를 사용하여 데이터를 수정하는 메서드에 '@Transactional' 어노테이션이 필요한 주된 이유는 무엇일까요?<br>
+    A: 데이터 변경 작업의 일관성 및 영속성 컨텍스트 관리<br>
+    => JPA는 트랜잭션 범위 안에서 영속성 컨텍스트를 관리하고 데이터 변경사항을 DB에 반영함. 데이터 정합성을 위해 필수적
+
+3. Spring에서 서비스와 같은 클래스에서 의존성을 주입받을 때 권장되는 방식은 무엇일까요?<br>
+    A: 생성자 주입 (Constructor Injection)<br>
+    => 생성자 주입은 필수 의존성을 명확히 하고 불변성을 확보하여 테스트하기 용이함
+
+4. Spring Boot 애플리케이션 테스트 시, In-Memory 데이터베이스(예: H2)를 사용하는 주된 이점은 무엇인가요?<br>
+    A: 테스트 간 데이터 독립성 및 빠른 초기화<br>
+    => 테스트 시작 시 DB를 초기화하고 테스트 종료 후 롤백하여 다른 테스트에 영향을 주지 않음. 빠르고 독립적인 테스트 환경 구축에 용이함
+
+5. Spring 테스트 클래스에서 '@Transactional' 어노테이션의 기본 동작은 무엇인가요?<br>
+    A: 각 테스트 메서드 후 데이터베이스 롤백<br>
+    => Spring 테스트의 @Transactional은 기본적으로 각 테스트 메서드가 끝날 때 변경사항을 DB에 반영하지 않고 자동으로 롤백시켜 테스트 데이터 잔여를 막음

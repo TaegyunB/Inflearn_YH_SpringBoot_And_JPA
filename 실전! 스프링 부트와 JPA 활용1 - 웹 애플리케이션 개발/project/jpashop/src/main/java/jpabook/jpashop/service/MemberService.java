@@ -1,7 +1,7 @@
 package jpabook.jpashop.service;
 
-import jpabook.jpashop.MemberRepository;
 import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
