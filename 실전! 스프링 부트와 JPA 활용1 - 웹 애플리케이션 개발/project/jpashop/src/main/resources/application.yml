@@ -13,6 +13,10 @@ spring:
 #        show_sql: true  # System.out 으로 출력됨
         format_sql: true
 
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
 logging:
   level:
     org.hibernate.SQL: debug  # jpa나 hibernate가 생성하는 sql이 다 보임 -> log로 출력됨

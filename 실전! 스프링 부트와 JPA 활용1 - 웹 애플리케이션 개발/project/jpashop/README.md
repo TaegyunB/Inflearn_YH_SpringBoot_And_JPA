@@ -328,4 +328,19 @@ Order order = new Order();
     A: Querydsl 사용<br>
     => 동적 쿼리는 조건에 따라 WHERE 절 등이 달라져 구현이 복잡함. JPQL 문자열 조립이나 Criteria API는 단점이 있어, 타입 안전성을 보장하고 가독성이 좋은 Querydsl이 추천됨
 
+## 섹션 8. 웹 계층 개발
+### 홈 화면과 레이아웃
+**스프링 부트 타임리프 기본 설정**
+~~~yml
+spring:
+    thymeleaf:
+        prefix: classpath:/templates/
+        suffix: .html
+~~~
 
+**view 리소스 등록**
+이쁜 디자인을 위해 부트스트랩을 사용
+- https://getbootstrap.com
+- 다운로드
+    - https://getbootstrap.com/docs/5.3/getting-started/download/
+- resources/static 하위에 css, js 파일 추가
