@@ -304,4 +304,5 @@ Order order = new Order();
     - 외부 코드에서는 new Order() 호출이 막힘
 => 그래서 @NoArgsConstructor 어노테이션을 사용
 
+### 주문 기능 테스트
 
