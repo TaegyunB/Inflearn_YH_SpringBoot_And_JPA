@@ -344,3 +344,17 @@ spring:
 - 다운로드
     - https://getbootstrap.com/docs/5.3/getting-started/download/
 - resources/static 하위에 css, js 파일 추가
+
+### 회원 등록
+**Entity를 그대로 쓰는 것보다는 Form 클래스를 따로 만들어서 이것을 활용하는 것을 더 선호**
+
+- @Valid
+    - 자바 빈 검증의 핵심 기능
+    - 요청 데이터를 컨트롤러 메서드에 바인딩할 때, 그 객체에 설정한 검증 규칙을 자동으로 검사해주는 기능
+
+- BindingResult
+    - BindingResult는 @Valid 바로 뒤에 선언해야 함
+    - BindingResult 없으면 검증 실패 시 예외가 발생해서 400 에러로 끝남
+    - BindingResult 있으면 예외 대신 에러 객체를 담아 처리 가능
+
+### 회원 목록 조회
