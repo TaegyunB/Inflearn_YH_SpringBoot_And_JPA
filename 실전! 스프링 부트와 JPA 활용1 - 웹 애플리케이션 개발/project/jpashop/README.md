@@ -479,6 +479,21 @@ public class ItemService {
 }
 ~~~
 
+### 상품 주문
+- @RequestParam
+    - HTTP 요청 파라미터를 메서드 매개변수에 바인딩하는 어노테이션
+
+~~~java
+@PostMapping("/order")
+public String order(@RequestParam("memberId") Long memberId,
+                     @RequestParam("itemId") Long itemId,
+                     @RequestParam("count") int count) {
+
+    orderService.order(memberId, itemId, count);
+    return "redirect:/orders";
+    }
+~~~
+- 브라우저에서 form을 submit하면 memberId, itemId, count 파라미터가 HTTP Body에 들어오고 이 값들을 자바 변수에 자동으로 넣어줌
 
 
 
