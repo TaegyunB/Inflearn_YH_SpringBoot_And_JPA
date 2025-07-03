@@ -389,3 +389,120 @@ spring:
 **핵심 정리**
 - 엔티티 = 비즈니스 핵심 모델
 - DTO = 표현, 통신, API 데이터 모델
+
+### 상품 수정
+~~~java
+@GetMapping("/items/{itemId}/edit")
+public String updateItemForm(@PathVariable("itemId") Long itemId, Model model) {
+...
+}
+~~~
+- @PathVariable
+    - URL 경로에 있는 값을 메서드 파라미터로 바인딩해주는 역할
+
+### 변경 감지와 병합(merge) -> 진짜 중요
+**준영속 엔티티**
+- 영속성 컨텍스트가 더는 관리하지 않는 엔티티를 말함(여기서는 itemService.saveItem(book) 에서 수정을 시도하는 Book 객체)
+    - 영속성 컨텍스트
+        - 엔티티(Entity)를 저장(persist)해서 관리하는 일종의 "1차 캐시"라고 이해하면 됨
+        - 엔티티를 식별자(ID) 기준으로 관리하는 JPA의 메모리 저장소
+        - EntityManager를 생성할 때 만들어짐
+- Book 객체는 이미 DB에 한번 저장되어서 식별자가 존재함. 이렇게 임의로 만들어낸 엔티티도 기존 식별자를 가지고 있으면 준영속 엔티티로 볼 수 있음
+
+**준영속 엔티티를 수정하는 2가지 방법**
+**변경 감지 기능 사용**
+~~~java
+@Transactional
+void update(Item itemParam) {  // itemParam: 파라미터로 넘어온 준영속 상태의 엔티티
+    Item findItem = em.find(Item.class, itemParam.getId());  // 같은 엔티티를 조회함
+    findItem.setPrice(itemParam.getPrice());  // 데이터를 수정함
+}
+~~~
+- 영속성 컨텍스트에서 엔티티를 다시 조회한 후에 데이터를 수정하는 방법
+- 트랜잭션 안에서 엔티티를 다시 조회, 변경할 값 선택 -> 트랜잭션 커밋 시점에 변경 감지(Dirty Checking)이 동작해서 데이터베이스에 UPDATE SQL 실행
+
+**병합(merge) 사용**
+- 병합은 준영속 상태의 엔티티를 영속 상태로 변경할 때 사용하는 기능
+~~~java
+@Transactional
+void update(Item itemParam) {  // itemParam: 파라미터로 넘어온 준영속 상태의 엔티티
+    Item mergeItem = em.merge(itemParam);
+}
+~~~
+
+**주의**
+- 변경 감지 기능을 사용하면 원하는 속성만 선택해서 변경할 수 있지만, 병합을 사용하면 모든 속성이 변경됨
+- 병합시 값이 없으면 null로 업데이트 할 위험도 있음(병합은 모든 필드를 교체함)
+
+**가장 좋은 해결 방법**
+- 엔티티를 변경할 때는 항상 변경 감지를 사용
+- 컨트롤러에서 어설프게 엔티티를 생성 X
+- 트랜잭션이 있는 서비스 계층에 식별자(id)와 변경할 데이터를 명확하게 전달(파라미터 or DTO)
+- 트랜잭션이 있는 서비스 계층에서 영속 상태의 엔티티를 조회하고, 엔티티의 데이터를 직접 변경
+- 트랜잭션 커밋 시점에 변경 감지가 실행됨
+
+~~~java
+@Controller
+@RequiredArgsConstructor
+public class ItemController {
+    private final ItemService itemService;
+    /**
+    * 상품 수정, 권장 코드
+    */
+    @PostMapping(value = "/items/{itemId}/edit")
+    public String updateItem(@PathVariable Long itemId, @ModelAttribute("form") BookForm form) {
+        itemService.updateItem(itemId, form.getName(), form.getPrice(),
+        form.getStockQuantity());
+        return "redirect:/items";
+    }
+}
+~~~
+
+~~~java
+package jpabook.jpashop.service;
+
+@Service
+@RequiredArgsConstructor
+public class ItemService {
+    private final ItemRepository itemRepository;
+    /**
+    * 영속성 컨텍스트가 자동 변경
+    */
+    @Transactional
+    public void updateItem(Long id, String name, int price, int stockQuantity)
+    {
+        Item item = itemRepository.findOne(id);
+        item.setName(name);
+        item.setPrice(price);
+        item.setStockQuantity(stockQuantity);
+    }
+}
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
