@@ -25,3 +25,6 @@
         - @ModelAttribute는 주로 폼 데이터(application/x-www-form-urlencoded)처리
         - @RequestBody는 JSON 같은 raw body를 처리
 
+### 회원 수정 API
+- PUT은 리소스 전체 업데이트를 할 때 주로 사용
+- PATCH는 리소스 일부만 부분 업데이트를 할 때 주로 사용
