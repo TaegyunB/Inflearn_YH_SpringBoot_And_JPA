@@ -16,4 +16,12 @@
 - Entity는 애플리케이션 내부 도메인 모델
 - API에 그대로 노출하면 내부 설계가 외부로 유출됨
 - 이후 Entity 필드나 관계를 바꾸면, API 계약도 깨져서 클라이언트가 전부 오류남
+<br>
+- @RequestBody
+    - HTTP 요청의 Body 내용을 자바 객체로 변환해주는 어노테이션
+    - 주로 JSON 데이터를 자바 객체로 바꿔서 컨트롤러 메서드의 파라미터에 주입할 떄 사용함
+    - 즉, 클라이언트가 JSON을 보내면, 스프링이 그걸 자동으로 객체에 매핑해 줌
+    - 주의사항
+        - @ModelAttribute는 주로 폼 데이터(application/x-www-form-urlencoded)처리
+        - @RequestBody는 JSON 같은 raw body를 처리
 
