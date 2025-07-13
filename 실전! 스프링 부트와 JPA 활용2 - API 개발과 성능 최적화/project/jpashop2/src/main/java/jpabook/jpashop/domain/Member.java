@@ -20,10 +20,10 @@ public class Member {
     @NotEmpty
     private String name;
 
-    @JsonIgnore  // JSON 직렬화와 역직렬화 과정에서 특정 필드나 메서드를 무시하도록 지시
     @Embedded
     private Address address;
 
+    @JsonIgnore  // JSON 직렬화와 역직렬화 과정에서 특정 필드나 메서드를 무시하도록 지시
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
