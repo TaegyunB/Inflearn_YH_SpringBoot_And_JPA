@@ -94,3 +94,19 @@
         - 지연로딩은 영속성 컨텍스트에서 조회하므로, 이미 조회된 경우 쿼리를 생략함
 
 ### 간단한 주문 조회 V3: 엔티티를 DTO로 변환 - 페치 조인 최적화
+- 엔티티를 페치 조인(fetch join)을 사용해서 쿼리 1번에 조회
+- 페치 조인으로 order -> member, order -> delivery 는 이미 조회된 상태이므로 지연로딩 X
+~~~java
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +  // Order와 연관된 Member를 함께 조회
+                        " join fetch o.delivery d", Order.class  // Order와 연관된 Delivery를 함께 조회
+        ).getResultList();
+    }
+~~~
+- join fetch
+  - JPA에서 연관된 엔티티를 한 번의 쿼리로 함께 조회하는 기능
+  - N+1 문제를 해결하는 핵심적인 방법
+
+### 간단한 주문 조회 V4: JPA에서 DTO 바로 조회
