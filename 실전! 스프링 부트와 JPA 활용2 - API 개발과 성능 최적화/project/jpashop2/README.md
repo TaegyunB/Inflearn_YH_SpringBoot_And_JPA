@@ -151,3 +151,5 @@ public List<OrderSimpleQueryDto> findOrderDtos() {
     A: 필요한 데이터만 선택 조회 가능함<br>
     => V4는 SELECT 절에서 필요한 컬럼만 선택해 DTO 생성자로 바로 전달함. 화면 의존성은 높아지지만, 불필요한 데이터 로딩을 줄여 성능에 유리할 수 있음
     
+## 섹션 5. API 개발 고급 - 컬렉션 조회 최적화
+### 주문 조회 V1: 엔티티 직접 노출
